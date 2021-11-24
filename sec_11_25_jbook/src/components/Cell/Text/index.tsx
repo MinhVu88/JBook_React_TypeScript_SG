@@ -1,10 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
 import MDEditor from "@uiw/react-md-editor";
 import "./editor.css";
+import { Cell } from "../../../redux";
+import { useActions } from "../../../hooks/useActions";
 
-export const Editor: React.FC = () => {
+interface TextCellProps {
+	cell: Cell;
+}
+
+export const Text: React.FC<TextCellProps> = ({ cell }): JSX.Element => {
+	const { updateCell } = useActions();
+
 	const [editMode, setEditMode] = useState(false);
-	const [text, setText] = useState("# Header");
 
 	const editModeRef = useRef<HTMLDivElement | null>(null);
 
@@ -15,12 +22,12 @@ export const Editor: React.FC = () => {
 				event.target &&
 				editModeRef.current.contains(event.target as Node)
 			) {
-				console.log("TextCell | Editor | The clicked element is inside the editor");
+				console.log("TextCell | The clicked element is inside the editor");
 
 				return;
 			}
 
-			console.log("TextCell | Editor | The clicked element is outside the editor");
+			console.log("TextCell | The clicked element is outside the editor");
 
 			setEditMode(false);
 		};
@@ -36,7 +43,7 @@ export const Editor: React.FC = () => {
 	if (editMode) {
 		return (
 			<div className="text-editor" ref={editModeRef}>
-				<MDEditor value={text} onChange={t => setText(t || "")} />
+				<MDEditor value={cell.content} onChange={t => updateCell(cell.id, t || "")} />
 			</div>
 		);
 	}
@@ -45,7 +52,7 @@ export const Editor: React.FC = () => {
 	return (
 		<div className="text-editor card" onClick={() => setEditMode(true)}>
 			<div className="card-content">
-				<MDEditor.Markdown source={text} />
+				<MDEditor.Markdown source={cell.content || "Click here to edit"} />
 			</div>
 		</div>
 	);

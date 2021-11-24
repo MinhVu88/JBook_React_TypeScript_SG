@@ -17,13 +17,13 @@ const iframeOriginalContents = `
 
             root.innerHTML = '<div style="color: red;"><h4>Runtime Error: </h4>' + error + '</div>';
 
-            console.error("Preview | iframeOriginalContents | handleError | error ->",error);
+            console.error("CodeCell preview | iframeOriginalContents | handleError | error ->",error);
           };
 
           window.addEventListener('error', event => {
             event.preventDefault();
 
-            console.log("Preview | iframeOriginalContents | window.addEventListener('error') | event ->",event);
+            console.log("CodeCell preview | iframeOriginalContents | window.addEventListener('error') | event ->",event);
 
             const asyncError = event.error;
 
@@ -37,7 +37,7 @@ const iframeOriginalContents = `
               try{
                 const transpiredBundledOutput = event.data;
 
-                console.log("Preview | iframeOriginalContents | window.addEventListener('message') | event.data ->", transpiredBundledOutput);
+                console.log("CodeCell preview | iframeOriginalContents | window.addEventListener('message') | event.data ->", transpiredBundledOutput);
               
                 eval(transpiredBundledOutput);
               }catch(error) {
@@ -61,11 +61,11 @@ export const Preview: React.FC<CodePreviewProps> = ({ bundledCode, status }) => 
 		setTimeout(() => {
 			iframeRef.current.contentWindow.postMessage(bundledCode, "*");
 
-			console.log("\nPreview | useEffect | iframeRef.current ->", iframeRef.current);
+			console.log("\nCodeCell preview | useEffect | iframeRef.current ->", iframeRef.current);
 		}, 50);
 	}, [bundledCode]);
 
-	console.log("Preview | status ->", status);
+	console.log("CodeCell preview | status ->", status);
 
 	return (
 		<div className="preview-wrapper">

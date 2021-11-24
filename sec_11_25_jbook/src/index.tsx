@@ -1,23 +1,26 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
 import "bulmaswatch/superhero/bulmaswatch.min.css";
-// import { CodeCell } from './components';
-import { Editor as TextEditor } from "./components/TextCell/Editor/index";
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import { store } from "./redux/index";
+import Cells from "./components/Cell/Cells";
 
 const App = (): JSX.Element => {
 	return (
-		<div className="App">
-			{/* <CodeCell/> */}
-			<TextEditor />
-		</div>
+		<Provider store={store}>
+			<div className="App">
+				<Cells />
+			</div>
+		</Provider>
 	);
 };
 
 export default App;
 
 ReactDOM.render(
-	<React.StrictMode>
+	<React.Fragment>
 		<App />
-	</React.StrictMode>,
+	</React.Fragment>,
 	document.getElementById("root")
 );

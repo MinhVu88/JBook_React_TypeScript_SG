@@ -23,7 +23,10 @@ const initialState: CellsState = {
 const getRandomId = () => Math.random().toString(36).substr(2, 5);
 
 const cellsReducer = produce(
-	(state: CellsState = initialState, action: Action): CellsState | undefined => {
+	(
+		state: CellsState = initialState, 
+		action: Action
+	): CellsState | undefined => {
 		console.log("\ncellsReducer.ts | action.payload ->", action.payload, "\n");
 
 		switch (action.type) {

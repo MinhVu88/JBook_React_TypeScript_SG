@@ -25,10 +25,12 @@ export const startService = async (userInput: string) => {
 			}
 		});
 
-		return {
+		const bundledOutput = {
 			code: result.outputFiles[0].text,
 			error: ""
-		};
+		}
+
+		return bundledOutput;
 	} catch (error: any) {
 		return {
 			code: "",

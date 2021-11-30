@@ -65,8 +65,6 @@ export const Preview: React.FC<CodePreviewProps> = ({ bundledCode, status }) => 
 		}, 50);
 	}, [bundledCode]);
 
-	console.log("CodeCell preview | status ->", status);
-
 	return (
 		<div className="preview-wrapper">
 			<iframe

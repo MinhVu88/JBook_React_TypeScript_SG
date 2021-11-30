@@ -21,4 +21,24 @@ export interface MoveCellAction {
 	payload: { id: string; direction: CellDirections };
 }
 
-export type Action = InsertCellAfterAction | UpdateCellAction | DeleteCellAction | MoveCellAction;
+// specify payload for the bundling actions -> vid 225
+export interface StartBundlingAction {
+	type: ActionType.START_BUNDLING;
+	payload: string;
+}
+
+export interface CompleteBundlingAction {
+	type: ActionType.COMPLETE_BUNDLING;
+	payload: {
+		id: string;
+		output: { code: string; error: string }
+	};
+}
+
+export type Action = 
+	InsertCellAfterAction | 
+	UpdateCellAction | 
+	DeleteCellAction | 
+	MoveCellAction | 
+	StartBundlingAction | 
+	CompleteBundlingAction;

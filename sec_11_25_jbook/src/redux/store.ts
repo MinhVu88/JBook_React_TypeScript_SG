@@ -22,4 +22,4 @@ store.dispatch({
 	}
 });
 
-console.log(store.getState());
+console.log('\nstore.ts | store.getState() ->',store.getState());

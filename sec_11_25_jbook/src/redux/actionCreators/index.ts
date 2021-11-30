@@ -1,11 +1,14 @@
+import { Dispatch } from 'redux';
 import { ActionType } from "../actionTypesEnum";
+import { CellTypes, CellDirections } from "../cell";
+import { startService } from '../../bundler/esbuild/index';
 import {
+	Action,
 	DeleteCellAction,
 	InsertCellAfterAction,
 	MoveCellAction,
 	UpdateCellAction
 } from "../actions";
-import { CellTypes, CellDirections } from "../cell";
 
 // synchronous actions
 export const insertCellAfter = (
@@ -46,3 +49,21 @@ export const moveCell = (
 };
 
 // asynchronous action
+export const bundle = (id: string, userInput: string) => {
+	return async (dispatch: Dispatch<Action>) => {
+		dispatch({
+			type: ActionType.START_BUNDLING,
+			payload: id
+		});
+
+		const { code, error } = await startService(userInput);
+
+		dispatch({
+			type: ActionType.COMPLETE_BUNDLING,
+			payload: {
+				id,
+				output: { code, error }
+			}
+		});
+	};
+};

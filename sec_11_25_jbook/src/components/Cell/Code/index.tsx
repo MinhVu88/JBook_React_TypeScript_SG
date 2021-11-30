@@ -1,34 +1,39 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Editor } from "./Editor";
 import { Preview } from "./Preview";
-import { startService } from "../../../bundler/esbuild/index";
 import { Resizable } from "../../Resizable";
 import { Cell } from "../../../redux";
 import { useActions } from "../../../hooks/useActions";
+import { useTypedSelector } from "../../../hooks/useTypedSelector";
+import './codeCell.css';
 
 interface CodeCellProps {
 	cell: Cell;
 }
 
 export const Code: React.FC<CodeCellProps> = ({ cell }): JSX.Element => {
-	const { updateCell } = useActions();
+	const { updateCell, bundle } = useActions();
 
-	const [output, setOutput] = useState("");
-	const [error, setError] = useState("");
+	const bundledOutput = useTypedSelector(state => state.bundledOutput[cell.id]);
 
 	useEffect(() => {
+		// vids 232 & 233
+		if(!bundledOutput) {
+			bundle(cell.id, cell.content);
+
+			return;
+		}
+
 		const timer = setTimeout(async () => {
-			const transpiredBundledOutput = await startService(cell.content);
-
-			setOutput(transpiredBundledOutput.code);
-
-			setError(transpiredBundledOutput.error);
-		}, 1000);
+			bundle(cell.id, cell.content);
+		}, 750);
 
 		return () => {
 			clearTimeout(timer);
 		};
-	}, [cell.content]);
+
+		 // eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [bundle, cell.id, cell.content]);
 
 	return (
 		<Resizable direction="vertical">
@@ -45,7 +50,25 @@ export const Code: React.FC<CodeCellProps> = ({ cell }): JSX.Element => {
 						onChange={value => updateCell(cell.id, value)} 
 					/>
 				</Resizable>
-				<Preview bundledCode={output} status={error} />
+				<div className="progress-wrapper-1">
+					{
+						!bundledOutput || bundledOutput.isBundling ? 
+						(
+							<div className='progress-wrapper-0'>
+								<progress 
+									max='100' 
+									className='progress is-primary is-small'
+								>
+									Loading
+								</progress>
+							</div>
+						) : 
+						<Preview 
+							bundledCode={bundledOutput.code} 
+							status={bundledOutput.error} 
+						/>
+					}
+				</div>
 			</div>
 		</Resizable>
 	);

@@ -5,6 +5,7 @@ import { Resizable } from "../../Resizable";
 import { Cell } from "../../../redux";
 import { useActions } from "../../../hooks/useActions";
 import { useTypedSelector } from "../../../hooks/useTypedSelector";
+import { useCumulativeCode } from "../../../hooks/useCumulativeCode";
 import './codeCell.css';
 
 interface CodeCellProps {
@@ -16,16 +17,25 @@ export const Code: React.FC<CodeCellProps> = ({ cell }): JSX.Element => {
 
 	const bundledOutput = useTypedSelector(state => state.bundledOutput[cell.id]);
 
+	// vids 239, 240 & 241
+	const cumulativeBundledOutput = useCumulativeCode(cell.id);
+
+	console.log('Cell | Code | index.tsx | cumulativeBundledOutput ->',cumulativeBundledOutput);
+
 	useEffect(() => {
 		// vids 232 & 233
 		if(!bundledOutput) {
-			bundle(cell.id, cell.content);
+			// bundle(cell.id, cell.content);
+
+			bundle(cell.id, cumulativeBundledOutput);
 
 			return;
 		}
 
 		const timer = setTimeout(async () => {
-			bundle(cell.id, cell.content);
+			// bundle(cell.id, cell.content);
+
+			bundle(cell.id, cumulativeBundledOutput);
 		}, 750);
 
 		return () => {
@@ -33,7 +43,7 @@ export const Code: React.FC<CodeCellProps> = ({ cell }): JSX.Element => {
 		};
 
 		 // eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [bundle, cell.id, cell.content]);
+	}, [bundle, cumulativeBundledOutput, cell.id]);
 
 	return (
 		<Resizable direction="vertical">

@@ -2,6 +2,7 @@ import React from "react";
 import { useTypedSelector } from "../../hooks/useTypedSelector";
 import Cell from "./Cell";
 import CellCreation from "./CellCreation";
+import './cells.css';
 
 const Cells: React.FC = () => {
 	const orderedCells = useTypedSelector(({ cells: { ids, data } }) => {
@@ -20,7 +21,7 @@ const Cells: React.FC = () => {
 
 	// why renderedCells is below CellCreation? -> vids: 219, 220, 221 & 222
 	return (
-		<div>
+		<div className="cells">
 			<CellCreation 
 				previousCellId={null} 
 				forcedVisibility={renderedCells.length === 0} 

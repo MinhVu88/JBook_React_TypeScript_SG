@@ -18,11 +18,16 @@ export const startService = async (userInput: string) => {
 			entryPoints: ["index.js"],
 			bundle: true,
 			write: false,
-			plugins: [unpkgPaths(), unpkgFiles(userInput)],
+			plugins: [
+				unpkgPaths(), 
+				unpkgFiles(userInput)
+			],
 			define: {
 				"process.env.NODE_ENV": '"production"',
 				global: "window"
-			}
+			},
+			jsxFactory: '_React.createElement',
+			jsxFragment: '_React.Fragment'
 		});
 
 		const bundledOutput = {

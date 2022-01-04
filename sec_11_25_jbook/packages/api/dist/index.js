@@ -11,6 +11,8 @@ var cells_1 = require("./routes/cells");
 var serve = function (port, fileName, dir, devMode) {
     var server = (0, express_1.default)();
     server.use(express_1.default.json());
+    // why is this middleware placed here? -> vid 296
+    server.use((0, cells_1.setCellsRouter)(fileName, dir));
     // the 2 execution environments in which the React assets can be served up:
     if (devMode) {
         // dev mode: the create-react-app server's running
@@ -25,7 +27,6 @@ var serve = function (port, fileName, dir, devMode) {
         var clientBuildPath = require.resolve('client/build/index.html');
         server.use(express_1.default.static(path_1.default.dirname(clientBuildPath)));
     }
-    server.use((0, cells_1.setCellsRouter)(fileName, dir));
     return new Promise(function (resolve, reject) {
         server.listen(port, resolve).on('error', reject);
     });

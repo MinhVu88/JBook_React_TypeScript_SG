@@ -1,6 +1,7 @@
 import { Dispatch } from 'redux';
+import axios from 'axios';
 import { ActionType } from "../actionTypesEnum";
-import { CellTypes, CellDirections } from "../cell";
+import { Cell, CellTypes, CellDirections } from "../cell";
 import { startService } from '../../bundler/esbuild/index';
 import {
 	Action,
@@ -9,6 +10,7 @@ import {
 	MoveCellAction,
 	UpdateCellAction
 } from "../actions";
+import { RootState } from '..';
 
 // synchronous actions
 export const insertCellAfter = (
@@ -49,6 +51,53 @@ export const moveCell = (
 };
 
 // asynchronous action
+export const fetchApiCells = () => {
+	return async (dispatch: Dispatch<Action>) => {
+		// to make isLoading true
+		dispatch({ 
+			type: ActionType.FETCH_API_CELLS, 
+			payload: undefined 
+		});
+
+		try {
+			const { data }: { data: Cell[] } = await axios.get('/cells');
+
+			console.log('packages/client/redux/actionCreators/index.ts | fetchApiCells | data ->',data);
+
+			dispatch({
+				type: ActionType.FETCH_API_CELLS_SUCCESS,
+				payload: data
+			});
+		} catch (error: any) {
+			dispatch({
+				type: ActionType.FETCH_API_CELLS_ERROR,
+				payload: error.message
+			});
+		}
+	};
+};
+
+// vid 295
+export const persistCells = () => {
+	return async (
+		dispatch: Dispatch<Action>,
+		getState: () => RootState
+	) => {
+		const { cells: { data, ids } } = getState();
+
+		const persistedCells = ids.map(id => data[id]);
+		
+		try {
+			await axios.post('/cells', { cells: persistedCells });	
+		} catch (error: any) {
+			dispatch({
+				type: ActionType.PERSIST_CELLS_ERROR,
+				payload: error.message
+			});
+		}
+	};
+};
+
 export const bundle = (id: string, userInput: string) => {
 	return async (dispatch: Dispatch<Action>) => {
 		dispatch({

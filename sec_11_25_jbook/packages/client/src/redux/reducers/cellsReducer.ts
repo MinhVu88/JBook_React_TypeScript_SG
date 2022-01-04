@@ -100,6 +100,38 @@ const cellsReducer = produce(
 
 				return state;
 			}
+			case ActionType.PERSIST_CELLS_ERROR: {
+				state.error = action.payload;
+				
+				return state;
+			}
+			case ActionType.FETCH_API_CELLS: {
+				state.isLoading = true;
+
+				state.error = null;
+
+				return state;
+			}
+			case ActionType.FETCH_API_CELLS_SUCCESS: {
+				state.isLoading = false;
+
+				state.ids = action.payload.map(cell => cell.id);
+
+				state.data = action.payload.reduce((accumulator, cell) => {
+					accumulator[cell.id] = cell;
+
+					return accumulator;
+				}, {} as CellsState['data']);
+				
+				return state;
+			}
+			case ActionType.FETCH_API_CELLS_ERROR: {
+				state.isLoading = false;
+
+				state.error = action.payload;
+
+				return state;
+			}
 			default:
 				return state;
 		}

@@ -47,7 +47,7 @@ var productionMode = process.env.NODE_ENV === 'production';
 exports.serveCommand = new commander_1.Command()
     .command('serve [fileName]')
     .description('open & edit a file')
-    .option('-p, --port <number>', 'a port on which a server runs', '4050')
+    .option('-p, --port <number>', 'a port on which a server runs', '4000')
     .action(function (fileName, options) {
     if (fileName === void 0) { fileName = 'cbook.js'; }
     return __awaiter(void 0, void 0, void 0, function () {

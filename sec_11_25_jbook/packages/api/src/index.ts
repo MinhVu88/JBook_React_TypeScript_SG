@@ -13,6 +13,9 @@ export const serve = (
 
   server.use(express.json());
 
+  // why is this middleware placed here? -> vid 296
+  server.use(setCellsRouter(fileName, dir)); 
+
   // the 2 execution environments in which the React assets can be served up:
   if (devMode) {
     // dev mode: the create-react-app server's running
@@ -24,10 +27,9 @@ export const serve = (
   } else {
     // production mode: cli is installed in a user's local machine
     const clientBuildPath = require.resolve('client/build/index.html');
+
     server.use(express.static(path.dirname(clientBuildPath)));
   }
-
-  server.use(setCellsRouter(fileName, dir));
 
   return new Promise<void>((resolve, reject) => {
     server.listen(port, resolve).on('error', reject);

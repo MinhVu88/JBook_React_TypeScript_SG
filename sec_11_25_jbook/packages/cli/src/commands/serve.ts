@@ -10,7 +10,7 @@ export const serveCommand = new Command()
   .option(
     '-p, --port <number>',
     'a port on which a server runs',
-    '4050'
+    '4000'
   )
   .action(async(
     fileName = 'cbook.js', 
